@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购买页面</title>
+</head>
+<body>
+    <div id="bamboo">
+      <div>
+          <div >商品名称：{{ productData.produtcName }}</div>
+          <div>
+              <span>请选择购买数量</span>
+              <button type="button"  @click="add()">+</button>
+              <input type="text" v-model="number">
+              <button type="button" @click="jian()">-</button>
+          </div>
+          <div>
+              <span>联系电话：</span>
+              <input type="text" ref="phone" placeholder="请输入联系电话">
+          </div>
+          <div>
+              <span>请输入联系地址：</span>
+              <input type="text" ref="addres" placeholder="请输入联系地址">
+          </div>
+          <div>
+              总计： {{ amount }}
+          </div>
+          <div type="button" @click="infoSumit">提交</div>
+      </div>
+    </div>
+</body>
+<script type="text/javascript" src="js/jquery-3.4.0.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var bamboo = new Vue ({
+        el: '#bamboo',
+        data () {
+            return {
+                id: '',
+                productData: '',
+                number: 1,
+                infoData: {}
+            }
+        },
+        created () {
+            var url = window.location.href;
+            this.id = this.getURL(url)
+        },
+        mounted () {
+            this.getData()
+        },
+        computed: {
+            amount: function () {
+                return this.number * this.productData.produtcPrice
+            }
+        },
+        methods: {
+            getURL (url) {
+                var url = url.split("?")[1];
+                var para = url.split("&");
+                var len = para.length;
+                var res = {};
+                var arr = [];
+                for(var i=0;i<len;i++){
+                    arr = para[i].split("=");
+                    res[arr[0]] = arr[1];
+                }
+                return res;
+            },
+            getData () {
+                let that = this;
+                $.get('/app-a/products/' + this.id.id, function(res) {
+                    let data = eval('(' + res + ')');
+                    that.productData = data.data;
+                    console.log(that.productData)
+                })
+            },
+            add () {
+                let that = this
+                if (that.number === that.productData.produtcStock) {
+                    alert(`最大库存只有:${that.productData.produtcStock}个`)
+                } else {
+                    that.number++
+                }
+            },
+            jian () {
+                let that = this;
+                if (that.number !== 0) {
+                    that.number--
+                }
+            },
+            infoSumit () {
+                let that = this;
+                that.infoData.buyerName = that.productData.produtcName;
+                that.infoData.number = that.number;
+                that.infoData.buyerPhone = that.$refs.phone.value;
+                that.infoData.buyerAddress = that.$refs.addres.value;
+                that.infoData.orderAmount = that.amount;
+                that.infoData.productId = that.id.id;
+                $.post("/app-b/order",that.infoData,function (res) {
+
+                    console.log(res)
+
+                })
+                /*$.ajax({
+                   type: "post",
+                   url: "/app-b/order",
+                   data: {"orderMaster": that.infoData,"ProductId": that.productData.produtcId},
+                   // data: {"page":"0","size":"3","cartonDetailNum":id,"cartoonId":cartoonId},//或者这样写进去
+                   dataType: 'json',
+                   success: function (res) {
+                       console.log(res)
+
+                   }
+               });*/
+            }
+        }
+    })
+</script>
+</html>

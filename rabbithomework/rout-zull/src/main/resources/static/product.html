@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>商品管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+<div class="container" id="app">
+    <table class="table table-bordered">
+        <tr>
+            <td>商品名</td>
+            <td>商品单价</td>
+            <td>商品剩余数量</td>
+            <td>商品描述</td>
+            <td>商品图片</td>
+            <td>操作</td>
+        </tr>
+
+        <tr v-for="(item,index) in Data.data" :key="index">
+            <td>{{ item.produtcName }}</td>
+            <td >{{ item.produtcPrice }}</td>
+            <td >{{ item.produtcStock }}</td>
+            <td >{{ item.productDescription }}</td >
+            <td >{{ item.productIcon }}</td >
+            <td @click="buy(item.produtcStock,item.produtcId)" style="cursor: pointer">购买</td>
+
+            <!--</td>
+            <td>皮皮虾</td>
+            <td>10.6</td>
+            <td>12</td>
+            <td>好吃的皮皮虾</td>
+            <td>xx.img</td>
+            -->
+        </tr>
+    </table>
+    <ul class="pager">
+        <li>总共<span></span>条数据
+        </li>
+        <li>总共<span id="pageCount"></span>页
+        </li>
+        <li>当前是第<span id="pageIndex" ></span>页
+        </li>
+        <li><a href="javascript:" onclick="prePage()">上一页</a></li>
+        <li><a href="javascript:" onclick="nextPage()">下一页</a></li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/jquery-3.4.0.min.js"></script>
+<script type="text/javascript" src="js/jquery.serializejson.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                Data: [],
+            }
+        },
+        mounted () {
+            this.getData()
+        },
+        methods: {
+            getData () {
+                let that = this;
+                $.get('/app-a/products',function(res) {
+                    let data = eval('(' + res + ')');
+                    that.Data = data;
+                    console.log(that.Data)
+                })
+            },
+            buy (number,id) {
+                if (number > 0) {
+                    window.location.href = '/order.html?id=' + id
+                } else {
+                    alert('库存不足')
+                }
+            }
+        }
+    })
+
+</script>
+</html>
