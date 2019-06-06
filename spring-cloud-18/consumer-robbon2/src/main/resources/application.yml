@@ -1,0 +1,9 @@
+server:
+ port: 9021
+spring:
+ application:
+  name: consumer-robbon2
+eureka:
+ client:
+  service-url:
+   defaultZone: http://127.0.0.1:1112/eureka/

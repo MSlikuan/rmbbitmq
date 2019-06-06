@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登陆</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/jquery-3.4.0.min.js"></script>
+<script type="text/javascript" src="js/jquery.serializejson.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<style  type="text/css">
+	.middle{
+		padding:10px;
+		border:1px solid #ccc;
+		border-radius:4px;
+		margin-top:150px;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="col-lg-6 col-lg-offset-3 middle">
+			<form class="form" id="searchForm">
+				<div class="form-group">
+					<label class="control-label">用户名</label>
+					<input name="name" class="form-control" id="name">
+				</div>
+				<div class="form-group">
+					<label class="control-label">密码</label>
+					<input id="pass" name="password" class="form-control" type="password">
+				</div>
+				<div class="form-group">
+					<label class="control-label"></label>
+					<input type="button" class="btn btn-success form-control" onclick="login()" value="登陆">
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-6 col-lg-offset-3 text-danger" ></div>
+	</div>
+    <script type="text/javascript">
+		 var jsen= new JSEncrypt();
+		 var publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDv57TSv7AX4EhoaD0DZv+1LXKbrTMWba6d39zgSdzLADjmjk/81uwlm5ac6KpT6cvmQJ+kMvyFliGQggqCK13DzpVyvaaCN8KElBdOKEJ184tyuj0sRlZDQKIPjsZUphepNgo6D5tojOsD/VSkTEVjSYuPu/uMQJfDzNtSz++EkQIDAQAB";
+
+		 function login() {
+		     // console.log($("#searchForm").serializeJSON())
+             var pass=$('#pass').val();
+             jsen.setPublicKey(publicKey);
+             pass =jsen.encrypt(pass);
+			 $.post("app-b/login",$("#searchForm").serializeJSON(),function(res){
+                 var data = eval('(' + res + ')');
+                 console.log(data.message)
+				 if(data.message === 'success') {
+                     location.href="/products.html"
+                     // window.location.href = '/products.html'
+				 }
+			 });
+         }
+	</script>
+</body>
+</html>

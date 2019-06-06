@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <script type="text/javascript" src="js/jquery-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/jsencrypt.min.js"></script>
+</head>
+<body>
+<form>
+    用户名：<input id="name" name="name" ><br>
+    密码: <input id="password" name="password" type="password"><br>
+    <input onclick="login()"  type="button" value="提交">
+</form>
+<script>
+    var jsen =new JSEncrypt();
+    var publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDv57TSv7AX4EhoaD0DZv+1LXKbrTMWba6d39zgSdzLADjmjk/81uwlm5ac6KpT6cvmQJ+kMvyFliGQggqCK13DzpVyvaaCN8KElBdOKEJ184tyuj0sRlZDQKIPjsZUphepNgo6D5tojOsD/VSkTEVjSYuPu/uMQJfDzNtSz++EkQIDAQAB";
+    function login() {
+        var time=new Date().getTime();
+        console.log(time)
+        var name=$('#name').val();
+        var password=$('#password').val();
+        jsen.setPublicKey(publicKey);
+        passwordtiem=password+time;
+        passwordtiem= jsen.encrypt(passwordtiem);
+        console.log(password)
+        $.post("app-b/register",{ name: name,pass: passwordtiem},function (data) {
+            alert(data)
+        })
+    }
+</script>
+</body>
+</html>

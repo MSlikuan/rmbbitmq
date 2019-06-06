@@ -1,0 +1,18 @@
+server:
+  port: 8091
+spring:
+ application:
+  name: eureka-client2
+ datasource:
+     driver-class-name: com.mysql.jdbc.Driver
+     url: jdbc:mysql://127.0.0.1:3306/ebuy
+     username: root
+     password: 123456
+eureka:
+ client:
+  service-url:
+   defaultZone: http://127.0.0.1:1112/eureka/
+#mybatis
+mybatis:
+ mapperLocations: classpath:/mapper/*Mapper.xml
+ type-aliases-package: com.wn.entity
